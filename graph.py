@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import division
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import random
 
 
+
+def graphBuild(N,c):
+    graph = nx.erdos_renyi_graph(N,c/N)
+    edges = graph.edges()
+    mat = adjMatrix(N,edges)
+    return mat
+    
 # Input : Max nb of nodes you want (1000 in our case)
 # Output : Parameters for the Erdős-Rényi model : Nb of nodes and proba
 def erdosRenyiParam(nb):

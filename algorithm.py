@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import division
 import numpy as np
 import numpy.random as rnd
 from graph import *
@@ -25,10 +26,10 @@ def Hamiltonian(matrix, coloration):
                 H+=1
     return H
 
-# Input: parameter beta, adjacency matrix, current coloration, number of colors
+# Input: parameter T, adjacency matrix, current coloration, number of colors
 # Performs one step of the Metropolis-Hastings algorithm
 # Output: new coloration
-def metropolisStep(beta, matrix, coloration, nbColors):
+def metropolisStep(T, matrix, coloration, nbColors):
     n,n=matrix.shape
     vertex=random.randint(0,n-1)
     possibleColors=range(nbColors)
@@ -41,14 +42,14 @@ def metropolisStep(beta, matrix, coloration, nbColors):
         return newColoration
     else:
         p=random.random()
-        if p<exp(-beta*Delta):
+        if p<exp(-Delta/T):
             return newColoration
         else:
             return coloration
 
 def metropolisAlgo(matrix,coloration,nbColors):
     for i in range(200):
-        coloration=metropolisStep(10.0,matrix,coloration,nbColors)
+        coloration=metropolisStep(0.1,matrix,coloration,nbColors)
         print "H:",Hamiltonian(matrix, coloration)
 
 
