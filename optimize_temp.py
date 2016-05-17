@@ -9,6 +9,8 @@ import networkx as nx
 import random
 import numpy as np
 import math
+from algorithm import randomColoration,Hamiltonian, metropolisStep
+from graph import graphBuild, colorChoice
 
 #Input: adjacency matrix of graph, number of colors, number of iterations
 #Ouput: an estimate of the initial temperature for simulated annealing

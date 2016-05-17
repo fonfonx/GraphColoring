@@ -7,26 +7,22 @@ import numpy as np
 import random
 
 
-
+# build an ER graph
 def graphBuild(N,c):
     graph = nx.erdos_renyi_graph(N,c/N)
     edges = graph.edges()
     mat = adjMatrix(N,edges)
     return mat
-    
-# Input : Max nb of nodes you want (1000 in our case)
-# Output : Parameters for the Erdős-Rényi model : Nb of nodes and proba
-def erdosRenyiParam(nb):
-    n = random.randint(1,nb)
-    p = random.random()
-    return (n, p)
 
-# Input : n, p from Erdos Renyi
-# Output : List of edges following the Erdős-Rényi model
-def randomGraph(n, p):
-    vertices = [i for i in range(n)]
-    edges = [(i, j) for i in xrange(n) for j in xrange(i) if random.random() < p]
-    return edges
+
+# Input : List of edges
+# Output : adjacency matrix
+def adjMatrix(n, edges):
+    matrix = np.zeros((n,n))
+    for (a, b) in edges:
+        matrix[a,b] = 1
+        matrix[b,a] = 1
+    return matrix
 
 # Input : Number of nodes, List of edges
 # Outputs the corresponding graph, without coloration
@@ -39,14 +35,7 @@ def draw_graph(n, edges):
     nx.draw(G, pos)
     plt.show()
 
-# Input : List of edges
-# Output : adjacency matrix
-def adjMatrix(n, edges):
-    matrix = np.zeros((n,n))
-    for (a, b) in edges:
-        matrix[a,b] = 1
-        matrix[b,a] = 1
-    return matrix
+
 
 # Input: Number of colors
 # Output : List of n random colors
@@ -93,3 +82,20 @@ def draw(nodeList, colorList, edgeList):
 # Output: list of colors corresponding to the coloration
 def colorList(coloration, cList):
     return [cList[i] for i in coloration]
+
+
+
+# Input : Max nb of nodes you want (1000 in our case)
+# Output : Parameters for the Erdős-Rényi model : Nb of nodes and proba
+def erdosRenyiParam(nb):
+    n = random.randint(1,nb)
+    p = random.random()
+    return (n, p)
+
+# Input : n, p from Erdos Renyi
+# Output : List of edges following the Erdős-Rényi model
+def randomGraph(n, p):
+    vertices = [i for i in range(n)]
+    edges = [(i, j) for i in xrange(n) for j in xrange(i) if random.random() < p]
+    return edges
+
