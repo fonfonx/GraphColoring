@@ -12,7 +12,7 @@ d = 5
 T0 = 40.0
 
 # number of iterations
-nbIter = 3000
+nbIter = 4000
 # number of iterations for initial temperature
 nbIterInit = 40
 
@@ -51,10 +51,10 @@ def expoDecrease(T, alpha, n, modulo, Tmin):
 # decreasingFunction
 def decreasingFunction(T0, T, n):
     # return identity(T)
-    if n%10==0 and n<=1000:
+    if n%10>=0 and n<=100:
         return powerDecrease(T0, n, 1.0)
-    if n>=1000 and T>0.1:
-        return powerDecrease(T0,n,0.2)
+    if n>=100 and T>0.1 and n%10>=0:
+        return powerDecrease(T0,n,0.6)
     return T
 
 

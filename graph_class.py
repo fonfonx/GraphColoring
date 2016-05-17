@@ -113,6 +113,7 @@ class Graph:
         print "Minimal Hamiltonian:", minH
         if plot:
             plt.plot(np.linspace(0, nbIter, nbIter + 1), tabH)
+            plt.axis((0,nbIter,0,int(1.3*H0)))
             plt.show()
 
 
