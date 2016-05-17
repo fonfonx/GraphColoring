@@ -16,8 +16,8 @@ nbIter = 3000
 # number of iterations for initial temperature
 nbIterInit = 40
 
-# plot curve
-plot=False
+# plot curve or not
+plot=True
 
 
 #### Decreasing functions ####
@@ -51,7 +51,11 @@ def expoDecrease(T, alpha, n, modulo, Tmin):
 # decreasingFunction
 def decreasingFunction(T0, T, n):
     # return identity(T)
-    return powerDecrease(T0, n, 0.5)
+    if n%10==0 and n<=1000:
+        return powerDecrease(T0, n, 1.0)
+    if n>=1000 and T>0.1:
+        return powerDecrease(T0,n,0.2)
+    return T
 
 
 G = Graph(N, d)

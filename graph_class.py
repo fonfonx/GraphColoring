@@ -107,6 +107,7 @@ class Graph:
             if H==0:
                 print "Proper Coloring found with "+str(i)+" iterations!"
                 break
+        print "Final Temperature:",T
         print "Initial Hamiltonian:", H0
         print "Final Hamiltonian:", H
         print "Minimal Hamiltonian:", minH
