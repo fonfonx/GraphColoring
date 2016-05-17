@@ -56,7 +56,7 @@ def metropolisAlgo(matrix,coloration,nbColors,iters, initialTemp):
 
 
 
-matrix = graphBuild(500,50)
+matrix = graphBuild(100,50)
 nbColors = 5
 cList = colorChoice(nbColors)
 coloration=randomColoration(matrix, nbColors)

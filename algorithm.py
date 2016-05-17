@@ -69,4 +69,4 @@ def main(nbNodeMax, nbColors):
     metropolisAlgo(matrix,coloration,nbColors)
     #draw(range(n),colorList(coloration,cList),edges)
 
-main(100,5)
+#main(100,5)
