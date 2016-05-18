@@ -44,21 +44,25 @@ def logDecrease(T0, n):
 def linearDecrease(T, alpha, n, modulo):
     if n % modulo == 0 and T > alpha:
         T -= alpha
+    return T
 
 
 def expoDecrease(T, alpha, n, modulo, Tmin):
     if n % modulo == 0 and T > Tmin:
         T *= alpha
-
+    return T
+    
 
 # decreasingFunction
 def decreasingFunction(T0, T, n):
     # return identity(T)
-    if n%10>=0 and n<=100:
-        return powerDecrease(T0, n, 1.0)
-    if n>=100 and T>0.1 and n%10>=0:
-        return powerDecrease(T0,n,0.6)
-    return T
+    # if n%10>=0 and n<=100:
+    #     return powerDecrease(T0, n, 1.0)
+    # if n>=100 and T>0.1 and n%10>=0:
+    #     return powerDecrease(T0,n,0.6)
+    # return T
+    return expoDecrease(T,0.95,n,10,0.1)
+
 
 
 G = Graph(N, d)
