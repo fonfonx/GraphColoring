@@ -3,7 +3,7 @@ from math import *
 
 # Parameters
 # number of nodes
-N = 100
+N = 10
 # expected number of neighbors
 c = 20
 # number of colors
@@ -18,6 +18,9 @@ nbIterInit = 40
 
 # plot curve or not
 plot=True
+
+# dat_file
+dat_file="graph_adjacency_matrix.mat"
 
 
 #### Decreasing functions ####
@@ -59,7 +62,8 @@ def decreasingFunction(T0, T, n):
 
 
 G = Graph(N, d)
-G.erdosRenyi(c)
+#G.erdosRenyi(c)
+G.initFromFile(dat_file)
 G.randomColoration()
 T0 = G.initialTemperature(nbIterInit)
 print "Initial Temperature:",T0

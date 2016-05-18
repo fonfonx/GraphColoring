@@ -3,6 +3,7 @@ import random
 from math import *
 from matplotlib import pyplot as plt
 import networkx as nx
+import scipy.io
 
 
 class Graph:
@@ -21,6 +22,13 @@ class Graph:
                 if random.random() < p:
                     self.adjMat[i, j] = 1
                     self.adjMat[j, i] = 1
+
+    # initialize the graph with a .dat file
+    def initFromFile(self, file):
+        self.adjMat=scipy.io.loadmat(file)['A'].astype(np.int)
+        self.nbNodes=self.adjMat.shape[0]
+        self.coloration=np.zeros(self.nbNodes,dtype=np.int)
+        print self.adjMat
 
     # random initialization of the coloration
     def randomColoration(self):
