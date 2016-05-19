@@ -4,6 +4,7 @@ from math import *
 from matplotlib import pyplot as plt
 import networkx as nx
 import scipy.io
+import time
 
 
 class Graph:
@@ -28,7 +29,20 @@ class Graph:
         self.adjMat=scipy.io.loadmat(file)['A'].astype(np.int)
         self.nbNodes=self.adjMat.shape[0]
         self.coloration=np.zeros(self.nbNodes,dtype=np.int)
-        print self.adjMat
+
+
+    # write a .mat file
+    def writeMat(self, file):
+        H=self.hamiltonian()
+        X=self.coloration+1
+        scipy.io.savemat(file+"_"+str(H)+".mat",{'X':X})
+
+    # assign a coloration with a .mat file
+    def setColorationFromMat(self,file):
+        col=np.array(scipy.io.loadmat(file)['X'].astype(np.int))
+        col=col.reshape(self.nbNodes)
+        self.coloration=col-1
+
 
     # random initialization of the coloration
     def randomColoration(self):
@@ -77,6 +91,14 @@ class Graph:
                     delta -= 1
         return delta
 
+    # vectorized version of delta function
+    def delta_vec(self,vertex,oldColor):
+        new=self.coloration==self.coloration[vertex]
+        old=self.coloration==oldColor
+        return np.sum(new*self.adjMat[vertex,:])-np.sum(old*self.adjMat[vertex,:])
+
+
+
     # Metropolis step
     def metropolisStep(self, T):
         oldH = self.hamiltonian()
@@ -98,7 +120,7 @@ class Graph:
     # Metropolis-Hastings algorithm
     # Input: number of iterations, intial temperature, decreasing function for T (for simulated annealing)
     # decreasing function takes as input T0 (initial temperature), T (actual temperature) and i (current number of iteration)
-    def metropolisAlgo(self, nbIter, T0, decreasingFunction, plot):
+    def metropolisAlgo(self, nbIter, T0, decreasingFunction, plot, save, file):
         T = T0
         tabH = np.zeros(nbIter + 1)
         H = self.hamiltonian()
@@ -119,6 +141,8 @@ class Graph:
         print "Initial Hamiltonian:", H0
         print "Final Hamiltonian:", H
         print "Minimal Hamiltonian:", minH
+        if save:
+            self.writeMat(file)
         if plot:
             plt.plot(np.linspace(0, nbIter, nbIter + 1), tabH)
             plt.axis((0,nbIter,0,int(1.3*H0)))
@@ -143,7 +167,7 @@ class Graph:
                 nb_sum+=1
         if nb_sum>=1:
             delta_mean=delta_sum/(1.0*nb_sum)
-            T0=-delta_mean/log(0.8)
+            T0=-delta_mean/log(0.5)
             return T0
         else:
             print "division by zero, choosing fixed initial temperature"
