@@ -4,6 +4,9 @@
 \usepackage[left=2.5cm,right=2.5cm,top=1cm,bottom=1.5cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{cite}
 \usepackage{graphicx}
@@ -59,20 +62,20 @@ In these experiments we fix an Erdös-Renyi graph $G$ with parameters $N=100$ an
 \item When $T$ is low, the probability to increase $H$ is very low and therefore we obtain a function $t \mapsto H(x^t)$ that is non-increasing. Now the distribution $\pi_{\beta}$ is closer to $\pi_{\infty}$ but the probability to get stuck in a local minimum is really high. Therefore the final Hamiltonian value is fast always equal to the minimal Hamiltonian value obtain during the iterations because the chain does not manage to leave this local minimum. However we obtain smaller values for $H$ ($H=50$ in our case on average).
 \end{itemize}
 
-Therefore we can conclude that when $T$ is fixed we have to choose a low value for $T$ in order to obtain small values for the Hamiltonian. The drawback of this method is that we are likely to get stuck in a local minimum.
+Therefore we can conclude that when $T$ is fixed we have to choose a low value for $T$ in order to obtain small values for the Hamiltonian. The drawback of this method is that we are likely to get stuck in a local minimum. However if we increase $T$ we will need too many iterations in order to reach small values of $H$.
 
 In order to obtain better results we will use the method of \textit{Simulated Annealing} which decreases the value of $T$ during the iterations.
 
 
-\section{Annealing Schedule}
+\section{Simulated Annealing}
 In this section we will describe how we chose and tuned the parameters of our algorithm. In order to minimize the bias we could have regarding the graph we're trying to color, several graphs were considered for each value of a parameter: one random graph with $N=100$, $c=5$ and $q=3$ (which was the graph provided on the project webpage, that we call $G_1$), one random graph with $N=200$, $c=40$, $q=7$ ($G_2$), one random graph with $N=50$, $c=10$, $q=3$ ($G_3$) and finally a random graph with $N=100$, $c=30$, $q=7$ ($G_4$). Besides $G_1$, we chose graphs with high edge probability that result in high final energy after having run the Metropolis algorithm so that's it's easier to notice differences between choices of parameters.
 
 \subsection{Initial Temperature}
-According to Kirkpatrick \cite{kirkpatrick}, a suitable temperature $T_0$ is one that results in an average increase of acceptance probability $p_0$ of about 0.8. The value of $T_0$ depends on the scaling of our cost function and hence is problem specific. To estimate this, we conducted an initial search on each graph where all increase are accepted and calculated the average increase over a fixed number of iterations, the initial temperature is given by :
-\begin{align*}
-T_0 = -\frac{\overline{\triangle_+}}{\mathrm{ln}(p_0)}
-\end{align*}
-Where $\triangle_+ = H(x^{new}) - H(x^t)$ is a strictly positive increase. We also tried different base acceptance probabilities (0.5, 0.3) and several fixed values of $T_0$, but this method gave us the best overall results
+According to Kirkpatrick \cite{kirkpatrick}, a suitable temperature $T_0$ is one that results in an average increase of acceptance probability $p_0$ of about 0.8. The value of $T_0$ depends on the scaling of our cost function and hence is problem specific. To estimate this, we conducted an initial search on each graph where all increases are accepted and calculated the average increase over a fixed number of iterations. The initial temperature is given by :
+$$T_0=-\dfrac{\mathbb{E}(\Delta_+)}{\mathrm{ln}(p_0)}$$
+
+Where $\Delta_+ = H(x^{new}) - H(x^0)$ is a strictly positive increase. We also tried different base acceptance probabilities (0.5, 0.3) and several fixed values of $T_0$, but this method gave us the best overall results.
+
 \subsection{Cooling Function}
 Several ways of decreasing the temperature were considered. We first tried an exponential schedule, defined as:
 \begin{align*}

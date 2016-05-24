@@ -90,17 +90,20 @@ G1.randomColoration()
 T01 = G1.initialTemperature(100)
 
 G2 = Graph(200, 5)
-G2.erdosRenyi(40)
+G2.initFromFile("G2.mat")
+#G2.erdosRenyi(40)
 G2.randomColoration()
 T02 = G2.initialTemperature(100)
 
 G3 = Graph(50, 3)
-G3.erdosRenyi(10)
+G3.initFromFile("G3.mat")
+#G3.erdosRenyi(10)
 G3.randomColoration()
 T03 = G3.initialTemperature(100)
 
 G4 = Graph(100, 7)
-G4.erdosRenyi(30)
+G4.initFromFile("G4.mat")
+#G4.erdosRenyi(30)
 G4.randomColoration()
 T04 = G4.initialTemperature(100)
 

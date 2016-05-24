@@ -1,18 +1,19 @@
 from graph_class import *
 from math import *
+import matplotlib.pyplot as plt
 
 # Parameters
 # number of nodes
 N = 100
 # expected number of neighbors
-c = 20
+c = 4
 # number of colors
 d = 5
 # initial temperature
-T0 = 0.01
+T0 = 10.0
 
 # number of iterations
-nbIter = 3000
+nbIter = 4000
 # number of iterations for initial temperature
 nbIterInit = 40
 
@@ -63,33 +64,26 @@ def mydecrease(T0,T,n):
     if n<=10:
         return T0
     if n>10:
-        if n%(10+n/50)==0:
+        if n%(10+n/100)==0:
             #return 0.95*T
-            return T/sqrt(n)
+            return T0/sqrt(n)
     return T
 
 
 # decreasingFunction
 def decreasingFunction(T0, T, n):
-    return identity(T)
-    # if n<=30:
-    #     return T
-    # if n%10>=0 and n<=100:
-    #     return powerDecrease(T0, n-30, 1.0)
-    # if n>=100 and T>0.1 and n%10>=0:
-    #     return powerDecrease(T0,n,0.6)
-    # return T
-    #return expoDecrease(T,0.95,n,10,0.1)
-    #return powerDecrease(T0,n,0.5)
+    #return identity(T)
+    #return expoDecrease(T,0.85,n,5,0.1)
+    return powerDecrease(T0,n,0.5)
     #return mydecrease(T0,T,n)
 
 def test():
     G = Graph(N, d)
-    #G.erdosRenyi(c)
-    G.initFromFile(inputXav)
+    G.erdosRenyi(c)
+    #G.initFromFile("G2.mat")
     G.randomColoration()
     #G.setColorationFromMat("coloration_50.mat")
-    #T0 = G.initialTemperature(nbIterInit)
+    T0 = G.initialTemperature(nbIterInit)
     print "Initial Temperature:",T0
     # G.vizualisation()
     G.metropolisAlgo(nbIter, T0, decreasingFunction, plot,save,out_file)
@@ -119,6 +113,27 @@ def valeurs_moy():
         rep+=minH
     print "average min H:",rep/(10.0)
 
+def Hmin(q):
+    G=Graph(N,q)
+    taby=[]
+    tabx=[]
+    for c in range(1,N,3):
+        print c
+        val=0
+        for k in range(4):
+            G.erdosRenyi(c)
+            G.randomColoration()
+            T0=G.initialTemperature(nbIterInit)
+            val+=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)
+        taby.append(val/4.0)
+        tabx.append(c)
+    print tabx,taby
+    plt.plot(tabx,taby)
+    plt.show()
+
+
 #competition(mat_file,100,3)
 #test()
-valeurs_moy()
+#valeurs_moy()
+
+Hmin(5)
