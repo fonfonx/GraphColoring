@@ -20,7 +20,7 @@ nbIterInit = 40
 plot=True
 
 # save coloration or not
-save=True
+save=False
 
 # mat_file
 mat_file="graph_adjacency_matrix.mat"
@@ -106,6 +106,7 @@ def competition(input, nbNodes, nbColors):
             H=actH
             print H
             G.writeMat(out_file)
+        print "actual best:",H
 
 #competition(mat_file,100,3)
 test()
