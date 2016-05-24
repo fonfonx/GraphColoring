@@ -114,13 +114,13 @@ def valeurs_moy():
     print "average min H:",rep/(10.0)
 
 def Hmin(q):
-    G=Graph(N,q)
     taby=[]
     tabx=[]
     for c in range(1,N,3):
         print c
         val=0
         for k in range(4):
+            G = Graph(N, q)
             G.erdosRenyi(c)
             G.randomColoration()
             T0=G.initialTemperature(nbIterInit)
