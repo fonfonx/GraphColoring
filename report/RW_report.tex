@@ -5,6 +5,9 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{cite}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage[colorinlistoftodos]{todonotes}
 
 \title{Simulated annealing algorithm for graph coloring}
@@ -46,9 +49,40 @@ With $\eta \in [0.05,0.4]$ with a step of $0.05$.\\
 For each value of $\alpha$ or $\eta$, we ran Metropolis on our 4 graphs and averaged the final energy obtained, we then kept the value for which the final energy was the minimum and ran the whole process again several times to make sure that it was indeed the best overall parameter. Note that even though differences in results were very small (the differences in energy between parameters were in the 5\% range), we noticed that the optimal parameter was consistent from one run to another, for example the best value for the exponential schedule was $\alpha = 0.85$, and it was the best in 80\% of cases.\\\\
 With the best value we obtained for each scheme ($\alpha = 0.85$, $\eta = 0.25$), we compared the two by plotting the evolution of $H(x^t)$ for both schemes:
 \begin{figure}[h!]
-\todo[inline]{include plot of H with expo and linear schedule}
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=2.3in, height = 1.7in]{H_G1_cropped.pdf}
+        \caption{$G_1$}
+        \label{fig:g1}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=2.3in, height=1.7in]{H_G2_cropped.pdf}
+        \caption{$G_2$}
+        \label{fig:g2}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve represents the evolution of the energy using a linear scheme while the blue curve represents the evolution of the energy using an exponential scheme.}
+    \label{fig:comparison}
 \end{figure}
-We also tried several epoch lengths (decrease temperature every $x$ iterations)
+\\\\
+As we can see from figure \ref{fig:comparison}, results are pretty similar. The exponential schedule tends to decrease faster but obtains better results overall, as such, we chose this schedule to decrease the temperature.
+\subsection{Epoch length}
+We also tried several epoch lengths (decrease temperature every $x$ iterations), for this we used our previously chosen cooling function and again averaged results over all 4 graphs, we also set 10 000 iterations to make sure to reach convergence. we summarize our results in the following tabular:
+\begin{center}
+\begin{tabular}{| c || c | c| c| c| c|}
+\hline
+Epoch & 1 & 2 & 3 & 5 & 10\\
+\hline
+Average minimum Hamiltonian & 131.17 & 126.77 & 126.98 & 124.67 & 127.59\\
+\hline
+\end{tabular}
+\captionof{table}{Epoch length results}
+\end{center}
+Even though differences are really small, an epoch length of 5 seems to be the most suited for our problem.
+Surprisingly enough, we observed that waiting a certain amount of iterations at the beginning of the algorithm before decreasing the temperature was worse than decreasing straight away \todo{a verifier}
 
 \bibliography{bibli_RW}
 \bibliographystyle{plain}
