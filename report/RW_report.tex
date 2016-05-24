@@ -1,0 +1,55 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage[colorinlistoftodos]{todonotes}
+
+\title{Simulated annealing algorithm for graph coloring}
+
+\author{Xavier Fontaine, Thomas Grivaz, Antoine Mougeot}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report summarizes our methodology and results in the context of experimenting the Markov Chain Monte Carlo method for the problem of graph coloring.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+\todo[inline]{TODO}
+
+\section{Annealing Schedule}
+In this section we will describe how we chose and tuned the parameters of our algorithm. In order to minimize the bias we could have regarding the graph we're trying to color, several graphs were considered for each value of a parameter: one random graph with $N=100$, $c=5$ and $q=3$ (which was the graph provided on the project webpage, that we call $G_1$), one random graph with $N=200$, $c=40$, $q=7$ ($G_2$), one random graph with $N=50$, $c=10$, $q=3$ ($G_3$) and finally a random graph with $N=100$, $c=30$, $q=7$ ($G_4$). Besides $G_1$, we chose graphs with high edge probability that result in high final energy after having run the Metropolis algorithm so that's it's easier to notice differences between choices of parameters.
+
+\subsection{Initial Temperature}
+According to Kirkpatrick \cite{kirkpatrick}, a suitable temperature $T_0$ is one that results in an average increase of acceptance probability $p_0$ of about 0.8. The value of $T_0$ depends on the scaling of our cost function and hence is problem specific. To estimate this, we conducted an initial search on each graph where all increase are accepted and calculated the average increase over a fixed number of iterations, the initial temperature is given by :
+\begin{align*}
+T_0 = -\frac{\overline{\triangle_+}}{\mathrm{ln}(p_0)}
+\end{align*}
+Where $\triangle_+ = H(x^{new}) - H(x^t)$ is a strictly positive increase. We also tried different base acceptance probabilities (0.5, 0.3) and several fixed values of $T_0$, but this method gave us the best overall results
+\subsection{Cooling Function}
+Several ways of decreasing the temperature were considered. We first tried an exponential schedule, defined as:
+\begin{align*}
+T(t) = T_0\alpha^{t}
+\end{align*}
+With $\alpha \in [0.7,0.95]$ with a step of $0.01$. A linear schedule was also considered:
+\begin{align*}
+T(t) = T_0 - \eta t
+\end{align*}
+With $\eta \in [0.05,0.4]$ with a step of $0.05$.\\
+For each value of $\alpha$ or $\eta$, we ran Metropolis on our 4 graphs and averaged the final energy obtained, we then kept the value for which the final energy was the minimum and ran the whole process again several times to make sure that it was indeed the best overall parameter. Note that even though differences in results were very small (the differences in energy between parameters were in the 5\% range), we noticed that the optimal parameter was consistent from one run to another, for example the best value for the exponential schedule was $\alpha = 0.85$, and it was the best in 80\% of cases.\\\\
+With the best value we obtained for each scheme ($\alpha = 0.85$, $\eta = 0.25$), we compared the two by plotting the evolution of $H(x^t)$ for both schemes:
+\begin{figure}[h!]
+\todo[inline]{include plot of H with expo and linear schedule}
+\end{figure}
+We also tried several epoch lengths (decrease temperature every $x$ iterations)
+
+\bibliography{bibli_RW}
+\bibliographystyle{plain}
+\end{document}
