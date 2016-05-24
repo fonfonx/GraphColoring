@@ -20,7 +20,7 @@ nbIterInit = 40
 plot=True
 
 # save coloration or not
-save=False
+save=True
 
 # mat_file
 mat_file="graph_adjacency_matrix.mat"
@@ -58,10 +58,19 @@ def expoDecrease(T, alpha, n, modulo, Tmin):
         T *= alpha
     return T
 
+def mydecrease(T0,T,n):
+    if n<=10:
+        return T0
+    if n>10:
+        if n%(10+n/50)==0:
+            #return 0.95*T
+            return T/sqrt(n)
+    return T
+
 
 # decreasingFunction
 def decreasingFunction(T0, T, n):
-    # return identity(T)
+    #return identity(T)
     # if n<=30:
     #     return T
     # if n%10>=0 and n<=100:
@@ -69,16 +78,34 @@ def decreasingFunction(T0, T, n):
     # if n>=100 and T>0.1 and n%10>=0:
     #     return powerDecrease(T0,n,0.6)
     # return T
-    #return expoDecrease(T,0.95,n,10,0.1)
-    return powerDecrease(T0,n,0.5)
+    return expoDecrease(T,0.95,n,10,0.1)
+    #return powerDecrease(T0,n,0.5)
+    #return mydecrease(T0,T,n)
 
+def test():
+    G = Graph(N, d)
+    #G.erdosRenyi(c)
+    G.initFromFile(mat_file)
+    G.randomColoration()
+    #G.setColorationFromMat("coloration_50.mat")
+    T0 = G.initialTemperature(nbIterInit)
+    print "Initial Temperature:",T0
+    # G.vizualisation()
+    G.metropolisAlgo(nbIter, T0, decreasingFunction, plot,save,out_file)
 
+def competition(input, nbNodes, nbColors):
+    G=Graph(nbNodes,nbColors)
+    G.initFromFile(input)
+    H=1000
+    while H>0:
+        G.randomColoration()
+        T0=G.initialTemperature(nbIterInit)
+        G.metropolisAlgo(nbIter, T0, decreasingFunction, False, False,out_file)
+        actH=G.hamiltonian()
+        if actH<H:
+            H=actH
+            print H
+            G.writeMat(out_file)
 
-G = Graph(N, d)
-#G.erdosRenyi(c)
-G.initFromFile(mat_file)
-G.randomColoration()
-#T0 = G.initialTemperature(nbIterInit)
-print "Initial Temperature:",T0
-# G.vizualisation()
-G.metropolisAlgo(nbIter, T0, decreasingFunction, plot,save,out_file)
+#competition(mat_file,100,3)
+test()

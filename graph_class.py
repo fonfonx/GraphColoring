@@ -13,6 +13,7 @@ class Graph:
         self.nbColors = nbColors
         self.nbNodes = nbNodes
         self.coloration = np.zeros(nbNodes, dtype=np.int)
+        self.bestColoration = np.zeros(nbNodes, dtype=np.int)
         self.cList = ['#46b94a', '#ff4e50', '#d62971', '#25a1da', '#47f00f', '#345acb', '#fbb904']
 
     # initialize the graph as an ER graph(n,c/N)
@@ -24,32 +25,32 @@ class Graph:
                     self.adjMat[i, j] = 1
                     self.adjMat[j, i] = 1
 
-    # initialize the graph with a .dat file
+    # initialize the graph with a .mat file
     def initFromFile(self, file):
-        self.adjMat=scipy.io.loadmat(file)['A'].astype(np.int)
-        self.nbNodes=self.adjMat.shape[0]
-        self.coloration=np.zeros(self.nbNodes,dtype=np.int)
-
+        self.adjMat = scipy.io.loadmat(file)['A'].astype(np.int)
+        self.nbNodes = self.adjMat.shape[0]
+        self.coloration = np.zeros(self.nbNodes, dtype=np.int)
+        self.bestColoration = np.zeros(self.nbNodes, dtype=np.int)
 
     # write a .mat file
     def writeMat(self, file):
-        H=self.hamiltonian()
-        X=self.coloration+1
-        scipy.io.savemat(file+"_"+str(H)+".mat",{'X':X})
+        self.coloration = self.bestColoration
+        H = self.hamiltonian()
+        X = self.coloration + 1
+        scipy.io.savemat(file + "_" + str(H) + ".mat", {'X': X})
 
     # assign a coloration with a .mat file
-    def setColorationFromMat(self,file):
-        col=np.array(scipy.io.loadmat(file)['X'].astype(np.int))
-        col=col.reshape(self.nbNodes)
-        self.coloration=col-1
-
+    def setColorationFromMat(self, file):
+        col = np.array(scipy.io.loadmat(file)['X'].astype(np.int))
+        col = col.reshape(self.nbNodes)
+        self.coloration = col - 1
 
     # random initialization of the coloration
     def randomColoration(self):
         for i in range(self.nbNodes):
             self.coloration[i] = random.randint(0, self.nbColors - 1)
 
-    # vizualisation
+    # vizualisation of the graph
     def vizualisation(self):
         colorList = [self.cList[i] for i in self.coloration]
         graph = nx.Graph()
@@ -92,12 +93,10 @@ class Graph:
         return delta
 
     # vectorized version of delta function
-    def delta_vec(self,vertex,oldColor):
-        new=self.coloration==self.coloration[vertex]
-        old=self.coloration==oldColor
-        return np.sum(new*self.adjMat[vertex,:])-np.sum(old*self.adjMat[vertex,:])
-
-
+    def delta_vec(self, vertex, oldColor):
+        new = self.coloration == self.coloration[vertex]
+        old = self.coloration == oldColor
+        return np.sum(new * self.adjMat[vertex, :]) - np.sum(old * self.adjMat[vertex, :])
 
     # Metropolis step
     def metropolisStep(self, T):
@@ -118,7 +117,7 @@ class Graph:
         return newH
 
     # Metropolis-Hastings algorithm
-    # Input: number of iterations, intial temperature, decreasing function for T (for simulated annealing)
+    # Input: number of iterations, initial temperature, decreasing function for T (for simulated annealing)
     # decreasing function takes as input T0 (initial temperature), T (actual temperature) and i (current number of iteration)
     def metropolisAlgo(self, nbIter, T0, decreasingFunction, plot, save, file):
         T = T0
@@ -128,16 +127,17 @@ class Graph:
         minH = H
         H0 = H
         for i in range(1, nbIter + 1):
-            T=decreasingFunction(T0,T,i)
+            T = decreasingFunction(T0, T, i)
             H = self.metropolisStep(T)
             tabH[i] = H
             if H < minH:
                 minH = H
+                self.bestColoration = np.copy(self.coloration)
                 # print H
-            if H==0:
-                print "Proper Coloring found with "+str(i)+" iterations!"
+            if H == 0:
+                print "Proper Coloring found with " + str(i) + " iterations!"
                 break
-        print "Final Temperature:",T
+        print "Final Temperature:", T
         print "Initial Hamiltonian:", H0
         print "Final Hamiltonian:", H
         print "Minimal Hamiltonian:", minH
@@ -145,14 +145,15 @@ class Graph:
             self.writeMat(file)
         if plot:
             plt.plot(np.linspace(0, nbIter, nbIter + 1), tabH)
-            plt.axis((0,nbIter,0,int(1.3*H0)))
+            plt.axis((0, nbIter, 0, int(1.3 * H0)))
             plt.show()
 
-
     # function finding the initial value of temperature
+    # the idea is to compute the mean positive variation of the Hamiltonian
+    # and to accept such a change with probability 0.8
     def initialTemperature(self, nbIter):
-        delta_sum=0
-        nb_sum=0
+        delta_sum = 0
+        nb_sum = 0
         for i in range(nbIter):
             vertex = random.randint(0, self.nbNodes - 1)
             oldColor = self.coloration[vertex]
@@ -161,16 +162,14 @@ class Graph:
             newColor = random.choice(possibleColors)
             self.coloration[vertex] = newColor
             Delta = self.delta(vertex, oldColor)
-            self.coloration[vertex]=oldColor
-            if Delta>0:
-                delta_sum+=Delta
-                nb_sum+=1
-        if nb_sum>=1:
-            delta_mean=delta_sum/(1.0*nb_sum)
-            T0=-delta_mean/log(0.5)
+            self.coloration[vertex] = oldColor
+            if Delta > 0:
+                delta_sum += Delta
+                nb_sum += 1
+        if nb_sum >= 1:
+            delta_mean = delta_sum / (1.0 * nb_sum)
+            T0 = -delta_mean / log(0.8)
             return T0
         else:
             print "division by zero, choosing fixed initial temperature"
             return 10.0
-
-
