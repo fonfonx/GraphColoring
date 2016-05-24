@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 # number of nodes
 N = 100
 # expected number of neighbors
-c = 4
+c = 20
 # number of colors
 d = 5
 # initial temperature
@@ -133,7 +133,7 @@ def Hmin(q):
 
 
 #competition(mat_file,100,3)
-#test()
+test()
 #valeurs_moy()
 
-Hmin(5)
+#Hmin(5)

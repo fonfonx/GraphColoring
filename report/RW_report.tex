@@ -77,18 +77,32 @@ $$T_0=-\dfrac{\mathbb{E}(\Delta_+)}{\mathrm{ln}(p_0)}$$
 Where $\Delta_+ = H(x^{new}) - H(x^0)$ is a strictly positive increase. We also tried different base acceptance probabilities (0.5, 0.3) and several fixed values of $T_0$, but this method gave us the best overall results.
 
 \subsection{Cooling Function}
-Several ways of decreasing the temperature were considered. We first tried an exponential schedule, defined as:
-\begin{align*}
-T(t) = T_0\alpha^{t}
-\end{align*}
-With $\alpha \in [0.7,0.95]$ with a step of $0.01$. A linear schedule was also considered:
-\begin{align*}
-T(t) = T_0 - \eta t
-\end{align*}
-With $\eta \in [0.05,0.4]$ with a step of $0.05$.\\
-For each value of $\alpha$ or $\eta$, we ran Metropolis on our 4 graphs and averaged the final energy obtained, we then kept the value for which the final energy was the minimum and ran the whole process again several times to make sure that it was indeed the best overall parameter. Note that even though differences in results were very small (the differences in energy between parameters were in the 5\% range), we noticed that the optimal parameter was consistent from one run to another, for example the best value for the exponential schedule was $\alpha = 0.85$, and it was the best in 80\% of cases.\\\\
-With the best value we obtained for each scheme ($\alpha = 0.85$, $\eta = 0.25$), we compared the two by plotting the evolution of $H(x^t)$ for both schemes:
-\begin{figure}[h!]
+Several ways of decreasing the temperature were considered. We found three cooling functions that gave good results:
+\begin{itemize}
+\item Exponential schedule: $$T(t)=T_0 \alpha^t$$
+We considered $\alpha \in [0.7,0.95]$ and we selected the best value of $\alpha$ with running experiments with a step of $0.01$.
+\item Linear schedule: $$T(t)=T_0 -\eta t$$ with $\eta \in [0.05,0.4]$ and a step of $0.05$.
+\item Power schedule: $$\forall t \geqslant 1, \ T(t)=\dfrac{T_0}{t^{\gamma}}$$ with $\gamma \in [0,1]$, and a step of $0.1$.
+\end{itemize}
+Moreover since we did not want to have too low temperatures we chose a minimal value for $T$: $$T(t)=\max(T_{\min},T(t)).$$ We found that $T_{\min}=0.1$ is a good value. 
+\\
+
+In order to find the best values for the parameters $\alpha$, $\gamma$ and $\eta$ we ran the Metropolis algorithm on our four graphs with different values for those parameters and we averaged the final energy obtained. We then kept the value for which the final energy was the minimum and ran the whole process again several times to make sure that it was indeed the best overall parameter. Note that even though differences in results were very small (the differences in energy between parameters were in the 5\% range), we noticed that the optimal parameter was consistent from one run to another. We checked also that the parameters we obtained were optimal for each graph taken separately.
+
+Finally we found the following values for our parameters. These are the values that gave the best average results after several runs of the Metropolis-Hastings algorithm.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 
+$\alpha$ & $\eta$ & $\gamma$ \\ 
+\hline 
+$0.85$ & $0.25$ & $0.5$ \\ 
+\hline 
+\end{tabular} 
+\end{center}
+
+We compared the three schemes with these parameters by plotting the evolution of $H(x^t)$ for all schemes:
+\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=2.3in, height = 1.7in]{H_G1_cropped.pdf}
@@ -107,7 +121,7 @@ With the best value we obtained for each scheme ($\alpha = 0.85$, $\eta = 0.25$)
     \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve represents the evolution of the energy using a linear scheme while the blue curve represents the evolution of the energy using an exponential scheme.}
     \label{fig:comparison}
 \end{figure}
-\\\\
+
 As we can see from figure \ref{fig:comparison}, results are pretty similar. The exponential schedule tends to decrease faster but obtains better results overall, as such, we chose this schedule to decrease the temperature.
 \subsection{Epoch length}
 We also tried several epoch lengths (decrease temperature every $x$ iterations), for this we used our previously chosen cooling function and again averaged results over all 4 graphs, we also set 10 000 iterations to make sure to reach convergence. we summarize our results in the following tabular:
