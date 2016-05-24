@@ -7,6 +7,10 @@
 \usepackage{cite}
 \usepackage[colorinlistoftodos]{todonotes}
 
+\usepackage{epsfig}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+
 \title{Simulated annealing algorithm for graph coloring}
 
 \author{Xavier Fontaine, Thomas Grivaz, Antoine Mougeot}
@@ -23,6 +27,38 @@ This report summarizes our methodology and results in the context of experimenti
 \section{Introduction}
 \label{sec:introduction}
 \todo[inline]{TODO}
+
+\section{Metropolis chain}
+
+In this section we run experiments with $\beta$ fixed and we apply the Metropolis-Hastings algorithm as described in the project statement. We analyze the influence of the initial value of $\beta$ on the minimal value of the Hamiltonian reached by our algorithm. We can think of $\beta$ as the inverse of a temperature and therefore we note $T=\dfrac{1}{\beta}$.
+
+In these experiments we fix an Erdös-Renyi graph $G$ with parameters $N=100$ and $c=20$. We use $d=5$ colors. We test three different values of temperature: $T=10$, $T=1$ and $T=0.1$ and we run the simulations with $3000$ iterations. Here are the curves we obtain:
+
+\begin{figure}[H]
+ \begin{minipage}[b]{.3\linewidth}
+  \centering\epsfig{figure=../Plots/FixedTemperature/courbeT10_I193_F172_M147.png,width=\linewidth}
+  \caption{$T=10.0$ and $\min H=147$ \label{fix10}}
+ \end{minipage} \hfill
+ \begin{minipage}[b]{.3\linewidth}
+  \centering\epsfig{figure=../Plots/FixedTemperature/courbeT1_I204_F87_M83.png,width=\linewidth}
+  \caption{$T=1.0$ and $\min H=83$ \label{fix1}}
+ \end{minipage} \hfill
+ \begin{minipage}[b]{.3\linewidth}
+  \centering\epsfig{figure=../Plots/FixedTemperature/courbeT01_I215_F50_M50.png,width=\linewidth}
+  \caption{$T=0.1$ and $\min H=50$ \label{fix01}}
+ \end{minipage}
+\end{figure}
+
+\begin{itemize}
+\item When $T$ is high (i.e. $\beta$ is small), the probability to accept a move that increases the Hamiltonian is high (for $T=10.0$ it is roughly $80\%$) and consequently the values of $H$ vary a lot. Therefore we observe a lot of fluctuations and the chain does not converge into a precise state. Moreover, the final Hamiltonian value is not equal to the minimal Hamiltonian value. We observe also that since $\beta$ is small, $\pi_{\beta}$ is far away from $\pi_{\infty}$ and then the minimal Hamiltonian value that we reach is really bigger than the global minimum we could reach. With the graph we used and these settings we obtain an average minimal value of $153$ for $H$.
+\item With an intermediate value of $T$ ($T=1.0$ here) the previous phenomenon is less visible. The probability to accept a move increasing the Hamiltonian is indeed smaller (about $10\%$ now) and therefore we observe a global decrease of $H$. However we can still see some fluctuations but the final Hamiltonian value is near from the minimal Hamiltonian value reached during the $3000$ iterations. The distribution $\pi_{\beta}$ is still far from $\pi_{\infty}$ and therefore the minimal Hamiltonian value we obtain here (its average is $80$) is still much bigger than the global minimum.
+\item When $T$ is low, the probability to increase $H$ is very low and therefore we obtain a function $t \mapsto H(x^t)$ that is non-increasing. Now the distribution $\pi_{\beta}$ is closer to $\pi_{\infty}$ but the probability to get stuck in a local minimum is really high. Therefore the final Hamiltonian value is fast always equal to the minimal Hamiltonian value obtain during the iterations because the chain does not manage to leave this local minimum. However we obtain smaller values for $H$ ($H=50$ in our case on average).
+\end{itemize}
+
+Therefore we can conclude that when $T$ is fixed we have to choose a low value for $T$ in order to obtain small values for the Hamiltonian. The drawback of this method is that we are likely to get stuck in a local minimum.
+
+In order to obtain better results we will use the method of \textit{Simulated Annealing} which decreases the value of $T$ during the iterations.
+
 
 \section{Annealing Schedule}
 In this section we will describe how we chose and tuned the parameters of our algorithm. In order to minimize the bias we could have regarding the graph we're trying to color, several graphs were considered for each value of a parameter: one random graph with $N=100$, $c=5$ and $q=3$ (which was the graph provided on the project webpage, that we call $G_1$), one random graph with $N=200$, $c=40$, $q=7$ ($G_2$), one random graph with $N=50$, $c=10$, $q=3$ ($G_3$) and finally a random graph with $N=100$, $c=30$, $q=7$ ($G_4$). Besides $G_1$, we chose graphs with high edge probability that result in high final energy after having run the Metropolis algorithm so that's it's easier to notice differences between choices of parameters.
