@@ -7,9 +7,9 @@ N = 100
 # expected number of neighbors
 c = 20
 # number of colors
-d = 3
+d = 5
 # initial temperature
-T0 = 10.0
+T0 = 0.01
 
 # number of iterations
 nbIter = 3000
@@ -24,6 +24,7 @@ save=False
 
 # mat_file
 mat_file="graph_adjacency_matrix.mat"
+inputXav="mygraph.mat"
 
 # mat file output (without extension)
 out_file="coloration"
@@ -70,7 +71,7 @@ def mydecrease(T0,T,n):
 
 # decreasingFunction
 def decreasingFunction(T0, T, n):
-    #return identity(T)
+    return identity(T)
     # if n<=30:
     #     return T
     # if n%10>=0 and n<=100:
@@ -78,17 +79,17 @@ def decreasingFunction(T0, T, n):
     # if n>=100 and T>0.1 and n%10>=0:
     #     return powerDecrease(T0,n,0.6)
     # return T
-    return expoDecrease(T,0.95,n,10,0.1)
+    #return expoDecrease(T,0.95,n,10,0.1)
     #return powerDecrease(T0,n,0.5)
     #return mydecrease(T0,T,n)
 
 def test():
     G = Graph(N, d)
     #G.erdosRenyi(c)
-    G.initFromFile(mat_file)
+    G.initFromFile(inputXav)
     G.randomColoration()
     #G.setColorationFromMat("coloration_50.mat")
-    T0 = G.initialTemperature(nbIterInit)
+    #T0 = G.initialTemperature(nbIterInit)
     print "Initial Temperature:",T0
     # G.vizualisation()
     G.metropolisAlgo(nbIter, T0, decreasingFunction, plot,save,out_file)
@@ -108,5 +109,16 @@ def competition(input, nbNodes, nbColors):
             G.writeMat(out_file)
         print "actual best:",H
 
+def valeurs_moy():
+    G=Graph(N,d)
+    G.initFromFile(inputXav)
+    rep=0
+    for k in range(10):
+        G.randomColoration()
+        minH=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)
+        rep+=minH
+    print "average min H:",rep/(10.0)
+
 #competition(mat_file,100,3)
-test()
+#test()
+valeurs_moy()
