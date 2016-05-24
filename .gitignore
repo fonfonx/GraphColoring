@@ -1,3 +1,8 @@
 *.pyc
 .spyderworkspace
+report/RW_report.aux
+report/RW_report.bbl
+report/RW_report.blg
+report/RW_report.log
+report/RW_report.synctex.gz
 
