@@ -66,6 +66,8 @@ def linearDecrease(T, alpha, n, modulo):
         T -= alpha
     return T    
 
+def powerDecrease(T0, n, gamma):
+    return T0 / (n ** gamma)
 
 # decreasingFunction
 def decreasingFunction(T0, T, n, param):
@@ -77,10 +79,12 @@ def decreasingFunction(T0, T, n, param):
     # if n>=100 and T>0.1 and n%10>=0:
     #     return powerDecrease(T0,n,0.6)
     # return T   
-    #if param==1:
-     #   return linearDecrease(T,0.4,n,param)
-    #if param==2:
-    return expoDecrease(T,0.85, n, param, 0.01)
+    if param==1:
+        return linearDecrease(T,0.25,n,param)
+    if param==2:
+        return expoDecrease(T,0.85, n, param, 0.01)
+    if param==3:
+        return powerDecrease(T0, n, 0.5)
 
 
 #Build 4 graphs with different topologies to test parameters
@@ -111,27 +115,28 @@ alphas = np.linspace(0.05, 0.4, 8)
 #alphas = np.linspace(0.7, 0.95, 26)
 alphas = [1,2,3,5,10]
 
-for i in alphas:
-    alpha = i
-    print "parameter value:", alpha
-    print "Graph 1"
-    H1 = metropolisAlgo2(copy.deepcopy(G1), nbIter, T01, decreasingFunction, alpha, plot)
-    print "Graph 2"
-    H2 = metropolisAlgo2(copy.deepcopy(G2),nbIter, T02, decreasingFunction, alpha, plot)
-    print "Graph 3"
-    H3 = metropolisAlgo2(copy.deepcopy(G3), nbIter, T03, decreasingFunction, alpha, plot)
-    print "Graph 4"
-    H4 = metropolisAlgo2(copy.deepcopy(G4),nbIter, T04, decreasingFunction, alpha, plot)
-    perf = np.mean([H1,H2,H3,H4])
-    print "average Hmin:", perf
-    results.update({i:perf})
+#for i in alphas:
+#    alpha = i
+#    print "parameter value:", alpha
+#    print "Graph 1"
+#    H1 = metropolisAlgo2(copy.deepcopy(G1), nbIter, T01, decreasingFunction, alpha, plot)
+#    print "Graph 2"
+#    H2 = metropolisAlgo2(copy.deepcopy(G2),nbIter, T02, decreasingFunction, alpha, plot)
+#    print "Graph 3"
+#    H3 = metropolisAlgo2(copy.deepcopy(G3), nbIter, T03, decreasingFunction, alpha, plot)
+#    print "Graph 4"
+#    H4 = metropolisAlgo2(copy.deepcopy(G4),nbIter, T04, decreasingFunction, alpha, plot)
+#    perf = np.mean([H1,H2,H3,H4])
+#    print "average Hmin:", perf
+#    results.update({i:perf})
 
-#tab_lin = metropolisAlgo2(copy.deepcopy(G2), nbIter, T02, decreasingFunction, 1, plot)
-#tab_expo = metropolisAlgo2(copy.deepcopy(G2), nbIter, T02, decreasingFunction, 2, plot)
-#
-#plt.plot(np.linspace(0, nbIter, nbIter + 1), tab_lin, 'r', np.linspace(0, nbIter, nbIter + 1), tab_expo, 'b')
-#plt.xlabel('number of iterations')
-#plt.ylabel('Energy')
-#plt.savefig('report/curves.pdf')
-#plt.show()
+tab_lin = metropolisAlgo2(copy.deepcopy(G4), nbIter, T04, decreasingFunction, 1, plot)
+tab_expo = metropolisAlgo2(copy.deepcopy(G4), nbIter, T04, decreasingFunction, 2, plot)
+tab_power = metropolisAlgo2(copy.deepcopy(G4), nbIter, T04, decreasingFunction, 3, plot)
+
+plt.plot(np.linspace(0, nbIter, nbIter + 1), tab_lin, 'r', np.linspace(0, nbIter, nbIter + 1), tab_expo, 'b', np.linspace(0, nbIter, nbIter + 1), tab_power, 'g')
+plt.xlabel('number of iterations')
+plt.ylabel('Energy')
+plt.savefig('report/curves.pdf')
+plt.show()
 

@@ -133,14 +133,14 @@ Here are the curves $(t \mapsto H(x^t))$ for the three schemes.
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=2.3in, height = 1.7in]{H_G1_cropped.pdf}
+        \includegraphics[width=2.3in, height = 1.7in]{../Plots/SimulatedAnnealing/H_G1.pdf}
         \caption{$G_1$}
         \label{fig:g1}
     \end{subfigure}
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
       %(or a blank line to force the subfigure onto a new line)
     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=2.3in, height=1.7in]{H_G2_cropped.pdf}
+        \includegraphics[width=2.3in, height=1.7in]{../Plots/SimulatedAnnealing/H_G2.pdf}
         \caption{$G_2$}
         \label{fig:g2}
     \end{subfigure}
@@ -148,20 +148,20 @@ Here are the curves $(t \mapsto H(x^t))$ for the three schemes.
     %(or a blank line to force the subfigure onto a new line)
     
     \begin{subfigure}[b]{0.45\textwidth}
-        \centering\epsfig{figure=../Plots/SimulatedAnnealing/G3_275_267_259.png,width=\linewidth}
+        \includegraphics[width=2.3in, height=1.7in]{../Plots/SimulatedAnnealing/H_G3.pdf}
         \caption{$G_3$}
         \label{fig:g3}
     \end{subfigure}
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
       %(or a blank line to force the subfigure onto a new line)
     \begin{subfigure}[b]{0.45\textwidth}
-        \centering\epsfig{figure=../Plots/SimulatedAnnealing/G4_464_465_48.png,width=\linewidth}
+        \includegraphics[width=2.3in, height=1.7in]{../Plots/SimulatedAnnealing/H_G4.pdf}
         \caption{$G_4$}
         \label{fig:g4}
     \end{subfigure}
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
     %(or a blank line to force the subfigure onto a new line)
-    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The blue curve corresponds to a linear scheme, the green one to an exponential scheme while the red curve represents the evolution of the energy using a power scheme.}
+    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve corresponds to a linear scheme, the blue one to an exponential scheme while the green curve represents the evolution of the energy using a power scheme.}
     \label{fig:comparison}
 \end{figure}
 
@@ -191,8 +191,8 @@ We plot the curve $H_{\min}$ as a function of $c$ for some fixed values of $q$ a
 
 \begin{figure}[H]
  \begin{minipage}[b]{\linewidth}
-  \centering\epsfig{figure=../Plots/Hmin/hmin_quick.png,width=0.5\linewidth}
-  \caption{$H_{\min}$ as a function of $c$ (blue: $q=3$, green: $q=5$, red: $q=7$) \label{hmin}}
+  \centering\epsfig{figure=../Plots/Hmin/hmin.pdf,width=0.5\linewidth}
+  \caption{$H_{\min}$ as a function of $c$ (blue: $q=3$, red: $q=5$, green: $q=7$) \label{hmin}}
  \end{minipage}
 \end{figure}
 

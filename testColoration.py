@@ -175,26 +175,34 @@ def valeurs_moy():
 def Hmin(q):
     taby=[]
     tabx=[]
-    for c in range(1,N/4,5):
+    for c in range(1,N/5,1):
         print c
         val=0
-        for k in range(1):
+        for k in range(5):
             G = Graph(N, q)
             G.erdosRenyi(c)
             G.randomColoration()
             T0=G.initialTemperature(nbIterInit)
             val+=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)[0]
-        taby.append(val/1.0)
+        taby.append(val/5.0)
         tabx.append(c)
     print tabx,taby
     plt.plot(tabx,taby)
     plt.show()
+    return (tabx, taby)
 
 
 #competition(mat_file,100,3)
 #test()
 #valeurs_moy()
 
-Hmin(7)
+(tabx1, tab3) = Hmin(3)
+(tabx2, tab5) = Hmin(5)
+(tabx3, tab7) = Hmin(7)
 
+plt.plot(tabx1, tab3, 'b', tabx2, tab5, 'r', tabx3, tab7, 'g')
+plt.xlabel('c')
+plt.ylabel('H_min')
+plt.savefig('report/hmin.pdf')
+plt.show()
 #test_moy(mat_file,100,3)
