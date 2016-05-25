@@ -38,6 +38,7 @@ class Graph:
         H = self.hamiltonian()
         X = self.coloration + 1
         scipy.io.savemat(file + "_" + str(H) + ".mat", {'X': X})
+        return file + "_" + str(H) + ".mat"
 
     # save a graph as a .mat file
     def saveGraph(self,file):
@@ -53,6 +54,7 @@ class Graph:
     def randomColoration(self):
         for i in range(self.nbNodes):
             self.coloration[i] = random.randint(0, self.nbColors - 1)
+        self.bestColoration=np.copy(self.coloration)
 
     # vizualisation of the graph
     def vizualisation(self):
@@ -151,7 +153,7 @@ class Graph:
             plt.plot(np.linspace(0, nbIter, nbIter + 1), tabH)
             plt.axis((0, nbIter, 0, int(1.3 * H0)))
             plt.show()
-        return minH
+        return minH,tabH
 
     # function finding the initial value of temperature
     # the idea is to compute the mean positive variation of the Hamiltonian

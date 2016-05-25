@@ -8,7 +8,7 @@ N = 100
 # expected number of neighbors
 c = 20
 # number of colors
-d = 5
+d = 7
 # initial temperature
 T0 = 10.0
 
@@ -74,19 +74,69 @@ def mydecrease(T0,T,n):
 def decreasingFunction(T0, T, n):
     #return identity(T)
     #return expoDecrease(T,0.85,n,5,0.1)
-    return powerDecrease(T0,n,0.5)
+    #return powerDecrease(T0,n,0.5)
     #return mydecrease(T0,T,n)
+    return expDecrease3(T0,T,n)
+
+def linDecrease(T0,T,n):
+    return linearDecrease(T,0.25,n,5)
+
+def expDecrease(T0,T,n):
+    return expoDecrease(T,0.85,n,5,0.1)
+
+def expDecrease2(T0,T,n):
+    return expoDecrease(T,0.85,n,10,0.1)
+
+def expDecrease3(T0,T,n):
+    if T>5 and n%5==0:
+        return 0.85*T
+    if T>1 and n%10==0:
+        return 0.85*T
+    if T>0.1 and n%20==0:
+        return 0.85*T
+    return T
+
+def powDecrease(T0,T,n):
+    return powerDecrease(T0,n,0.5)
 
 def test():
     G = Graph(N, d)
-    G.erdosRenyi(c)
-    #G.initFromFile("G2.mat")
+    #G.erdosRenyi(c)
+    G.initFromFile("G4.mat")
     G.randomColoration()
     #G.setColorationFromMat("coloration_50.mat")
     T0 = G.initialTemperature(nbIterInit)
     print "Initial Temperature:",T0
     # G.vizualisation()
     G.metropolisAlgo(nbIter, T0, decreasingFunction, plot,save,out_file)
+
+def test_moy(graph,N,d):
+    G=Graph(N,d)
+    G.initFromFile(graph)
+    G.randomColoration()
+    initColFile=G.writeMat("initcol")
+    print G.coloration
+    print "lol"
+    T0=G.initialTemperature(nbIterInit)
+    print T0
+    tabmin=np.zeros(4)
+    dec=[expDecrease,expDecrease2, expDecrease3,powDecrease]
+    for method in range(4):
+        tab=np.zeros(nbIter+1)
+        minmoy=0.0
+        for k in range(10):
+            G.setColorationFromMat(initColFile)
+            minH,tabH=G.metropolisAlgo(nbIter,T0,dec[method],False,False,out_file)
+            tab+=tabH
+            minmoy+=minH
+        tab=tab/10.0
+        minmoy=minmoy/10.0
+        tabmin[method]=minmoy
+        print "method,min",method,minmoy
+        #plt.plot(np.linspace(0,nbIter,nbIter+1),tab)
+    print tabmin
+    #plt.show()
+
 
 def competition(input, nbNodes, nbColors):
     G=Graph(nbNodes,nbColors)
@@ -109,7 +159,7 @@ def valeurs_moy():
     rep=0
     for k in range(10):
         G.randomColoration()
-        minH=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)
+        minH,tabH=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)
         rep+=minH
     print "average min H:",rep/(10.0)
 
@@ -124,7 +174,7 @@ def Hmin(q):
             G.erdosRenyi(c)
             G.randomColoration()
             T0=G.initialTemperature(nbIterInit)
-            val+=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)
+            val+=G.metropolisAlgo(nbIter,T0,decreasingFunction,False,False,out_file)[0]
         taby.append(val/4.0)
         tabx.append(c)
     print tabx,taby
@@ -137,3 +187,5 @@ def Hmin(q):
 #valeurs_moy()
 
 #Hmin(5)
+
+test_moy("G2.mat",200,5)
