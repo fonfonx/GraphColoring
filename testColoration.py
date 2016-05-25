@@ -8,7 +8,7 @@ N = 100
 # expected number of neighbors
 c = 20
 # number of colors
-d = 7
+d = 5
 # initial temperature
 T0 = 10.0
 
@@ -38,7 +38,6 @@ out_file="coloration"
 # identity (no simulated annealing)
 def identity(T):
     return T
-
 
 # power decrease
 def powerDecrease(T0, n, gamma):
@@ -76,7 +75,7 @@ def decreasingFunction(T0, T, n):
     #return expoDecrease(T,0.85,n,5,0.1)
     #return powerDecrease(T0,n,0.5)
     #return mydecrease(T0,T,n)
-    return expDecrease3(T0,T,n)
+    return powDecrease2(T0,T,n)
 
 def linDecrease(T0,T,n):
     return linearDecrease(T,0.25,n,5)
@@ -112,7 +111,7 @@ def linDecrease2(T0,T,n):
 def test():
     G = Graph(N, d)
     #G.erdosRenyi(c)
-    G.initFromFile("G4.mat")
+    G.initFromFile("mygraph.mat")
     G.randomColoration()
     #G.setColorationFromMat("coloration_50.mat")
     T0 = G.initialTemperature(nbIterInit)
@@ -143,9 +142,9 @@ def test_moy(graph,N,d):
         minmoy=minmoy/10.0
         tabmin[method]=minmoy
         print "method,min",method,minmoy
-        #plt.plot(np.linspace(0,nbIter,nbIter+1),tab)
+        plt.plot(np.linspace(0,nbIter,nbIter+1),tab)
     print tabmin
-    #plt.show()
+    plt.show()
 
 
 def competition(input, nbNodes, nbColors):
@@ -176,7 +175,7 @@ def valeurs_moy():
 def Hmin(q):
     taby=[]
     tabx=[]
-    for c in range(1,N,3):
+    for c in range(1,N/2,3):
         print c
         val=0
         for k in range(4):
@@ -196,6 +195,6 @@ def Hmin(q):
 #test()
 #valeurs_moy()
 
-#Hmin(5)
+Hmin(5)
 
-test_moy("G4.mat",100,7)
+#test_moy(mat_file,100,3)

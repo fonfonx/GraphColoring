@@ -65,7 +65,7 @@ In order to obtain better results we will use the method of \textit{Simulated An
 
 
 \section{Simulated Annealing}
-In this section we will describe how we chose and tuned the parameters of our algorithm. In order to minimize the bias we could have regarding the graph we're trying to color, several graphs were considered for each value of a parameter: one random graph with $N=100$, $c=5$ and $q=3$ (which was the graph provided on the project webpage, that we call $G_1$), one random graph with $N=200$, $c=40$, $q=7$ ($G_2$), one random graph with $N=50$, $c=10$, $q=3$ ($G_3$) and finally a random graph with $N=100$, $c=30$, $q=7$ ($G_4$). Besides $G_1$, we chose graphs with high edge probability that result in high final energy after having run the Metropolis algorithm so that's it's easier to notice differences between choices of parameters.
+In this section we will describe how we chose and tuned the parameters of our algorithm. In order to minimize the bias we could have regarding the graph we're trying to color, several graphs were considered for each value of a parameter: one random graph with $N=100$, $c=5$ and $q=3$ (which was the graph provided on the project webpage, that we call $G_1$), one random graph with $N=200$, $c=40$, $q=5$ ($G_2$), one random graph with $N=50$, $c=10$, $q=3$ ($G_3$) and finally a random graph with $N=100$, $c=30$, $q=7$ ($G_4$). Besides $G_1$, we chose graphs with high edge probability that result in high final energy after having run the Metropolis algorithm so that's it's easier to notice differences between choices of parameters.
 
 \subsection{Initial Temperature}
 According to Kirkpatrick \cite{kirkpatrick}, a suitable temperature $T_0$ is one that results in an average increase of acceptance probability $p_0$ of about 0.8. The value of $T_0$ depends on the scaling of our cost function and hence is problem specific. To estimate this, we conducted an initial search on each graph where all increases are accepted and calculated the average increase over a fixed number of iterations. The initial temperature is given by :
@@ -146,17 +146,44 @@ Here are the curves $(t \mapsto H(x^t))$ for the three schemes.
     \end{subfigure}
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
     %(or a blank line to force the subfigure onto a new line)
-    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve represents the evolution of the energy using a linear scheme while the blue curve represents the evolution of the energy using an exponential scheme.}
+    
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering\epsfig{figure=../Plots/SimulatedAnnealing/G3_275_267_259.png,width=\linewidth}
+        \caption{$G_3$}
+        \label{fig:g3}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering\epsfig{figure=../Plots/SimulatedAnnealing/G4_464_465_48.png,width=\linewidth}
+        \caption{$G_4$}
+        \label{fig:g4}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The blue curve corresponds to a linear scheme, the green one to an exponential scheme while the red curve represents the evolution of the energy using a power scheme.}
     \label{fig:comparison}
 \end{figure}
 
-
-
-As we can see from figure \ref{fig:comparison}, results are pretty similar. The exponential schedule tends to decrease faster but obtains better results overall, as such, we chose this schedule to decrease the temperature.
+As we can see from figure \ref{fig:comparison}, results are pretty similar. We choose the power decrease scheme because it seems to give the best results. However, there is still some variance in the results and other cooling models can also give good results.
 
 \subsection{Utility of Simulated Annealing}
 
-In this subsection we want to compare the results obtained with simulated annealing and the results obtained in section \ref{sec2} without simulated annealing. Therefore we run experiments on the same graph as in section \ref{sec2} with the decreasing function described in the previous part. We obtain the following results:
+In this subsection we want to compare the results obtained with simulated annealing and the results obtained in section \ref{sec2} without simulated annealing. Therefore we run experiments on the same graph as in section \ref{sec2} with the decreasing function described in the previous part. We obtain the following results (the minimal Hamitonian value is computed as an average on $10$ runs):
+
+\begin{figure}[H]
+ \begin{minipage}[b]{.45\linewidth}
+  \centering\epsfig{figure=../Plots/SimulatedAnnealing/courbe_mygraph_45.png,width=\linewidth}
+  \caption{Simulated annealing gives $\min H=47$ \label{sim}}
+ \end{minipage} \hfill
+ \begin{minipage}[b]{.45\linewidth}
+  \centering\epsfig{figure=../Plots/FixedTemperature/courbeT01_I215_F50_M50.png,width=\linewidth}
+  \caption{$T=0.1$ gives $\min H=50$ \label{fix01bis}}
+ \end{minipage}
+\end{figure}
+
+
+As we can see on the figure, we obtain better results with simulated annealing and a minimal temperature around $0.1$ than with setting directly the temperature to $0.1$ and keeping it fixed. This justifies the use of simulated annealing to obtain better results.
 
 \subsection{Influence of Graph density $c$ on $H_{\min}$}
 

@@ -98,12 +98,6 @@ class Graph:
                     delta -= 1
         return delta
 
-    # vectorized version of delta function
-    def delta_vec(self, vertex, oldColor):
-        new = self.coloration == self.coloration[vertex]
-        old = self.coloration == oldColor
-        return np.sum(new * self.adjMat[vertex, :]) - np.sum(old * self.adjMat[vertex, :])
-
     # Metropolis step
     def metropolisStep(self, T):
         oldH = self.hamiltonian()
