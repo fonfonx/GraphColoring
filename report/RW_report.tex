@@ -71,7 +71,7 @@ In this section we will describe how we chose and tuned the parameters of our al
 According to Kirkpatrick \cite{kirkpatrick}, a suitable temperature $T_0$ is one that results in an average increase of acceptance probability $p_0$ of about 0.8. The value of $T_0$ depends on the scaling of our cost function and hence is problem specific. To estimate this, we conducted an initial search on each graph where all increases are accepted and calculated the average increase over a fixed number of iterations. The initial temperature is given by :
 $$T_0=-\dfrac{\mathbb{E}(\Delta_+)}{\mathrm{ln}(p_0)}$$
 
-Where $\Delta_+ = H(x^{new}) - H(x^0)$ is a strictly positive increase. We also tried different base acceptance probabilities (0.5, 0.3) and several fixed values of $T_0$, but this method gave us the best overall results.
+Where $\Delta_+ = H(x^{new}) - H(x^t)$ is a strictly positive increase. We also tried different base acceptance probabilities (0.5, 0.3) and several fixed values of $T_0$, but this method gave us the best overall results.
 
 \subsection{Cooling Function}
 Several ways of decreasing the temperature were considered. We found three cooling functions that gave good results:
@@ -98,34 +98,7 @@ $0.85$ & $0.25$ & $0.5$ \\
 \end{tabular} 
 \end{center}
 
-\subsection{Epoch length}
-
-We found out that decreasing the temperature at each iteration was not the best cooling scheme. Indeed when $T$ is low, the probability to accept increasing moves is small and therefore we need to stay at the same value of the temperature before accepting some moves. If we decrease directly the value of $T$ we do not really take profit of the effect of intermediate temperature values. That is why we tried to decrease the temperature every $x$ iterations, where $x \geqslant 2$ is an integer to find. In order to find this epoch length we run the Metropolis algorithm several times with different values of $x$ and we chose the value of $x$ that gave the best average results. We also set the number of iterations to $10,000$ to make sure to reach convergence.We summarize our results in the following tabular:
-\begin{center}
-\begin{tabular}{| c || c | c| c| c| c|}
-\hline
-Epoch & 1 & 2 & 3 & 5 & 10\\
-\hline
-Average minimum Hamiltonian & 131.17 & 126.77 & 126.98 & 124.67 & 127.59\\
-\hline
-\end{tabular}
-\captionof{table}{Epoch length results}
-\end{center}
-
-We find that an epoch of $5$ gives good results. However, as we said it, for low temperatures the acceptance probability of moves that increase the Hamiltonian is low and therefore we have to stay at the same temperature during few iterations to see the effect of this temperature value. This remark suggests to try non-constant epoch lengths, i.e. to wait longer times before decreasing the temperature when $T$ is low.
-
-A possible scheme to implement this is the following:
-\begin{equation*}
-\left\{
-\begin{aligned}
-&\textrm{if }T>5, \textrm{ decrease temperature every 5 iterations}\\
-&\textrm{if }T>1, \textrm{ decrease temperature every 10 iterations}\\
-&\textrm{if }T>0.1, \textrm{ decrease temperature every 20 iterations}\\
-\end{aligned}
-\right.
-\end{equation*}
-
-\subsection{Determination of the best decreasing function}
+\subsection{Determination of the best cooling function}
 
 In order to choose the best decreasing function, we plot on the same graph the average curves obtained for the three cooling schemes presented above. In order to decrease the bias due to randomness we work on fixed graphs with the same initial random coloring and we average the results on $10$ runs.
 
@@ -161,11 +134,37 @@ Here are the curves $(t \mapsto H(x^t))$ for the three schemes.
     \end{subfigure}
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
     %(or a blank line to force the subfigure onto a new line)
-    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve corresponds to a linear scheme, the blue one to an exponential scheme while the green curve represents the evolution of the energy using a power scheme.}
+    \caption{Evolution of the energy of the Metropolis algorithm for the four graphs. The red curve corresponds to a linear scheme, the blue one to an exponential scheme while the green curve represents the evolution of the energy using a power scheme.}
     \label{fig:comparison}
 \end{figure}
 
 As we can see from figure \ref{fig:comparison}, results are pretty similar. We choose the power decrease scheme because it seems to give the best results. However, there is still some variance in the results and other cooling models can also give good results.
+\subsection{Epoch length}
+
+We found out that decreasing the temperature at each iteration was not the best cooling scheme. Indeed when $T$ is low, the probability to accept increasing moves is small and therefore we need to stay at the same value of the temperature before accepting some moves. If we decrease directly the value of $T$ we do not really take profit of the effect of intermediate temperature values. That is why we tried to decrease the temperature every $x$ iterations, where $x \geqslant 2$ is an integer to find. In order to find this epoch length we run the Metropolis algorithm several times with different values of $x$ and we chose the value of $x$ that gave the best average results. We also set the number of iterations to $10,000$ to make sure to reach convergence.We summarize our results in the following tabular:
+\begin{center}
+\begin{tabular}{| c || c | c| c| c| c|}
+\hline
+Epoch & 1 & 2 & 3 & 5 & 10\\
+\hline
+Average minimum Hamiltonian & 131.17 & 126.77 & 126.98 & 124.67 & 127.59\\
+\hline
+\end{tabular}
+\captionof{table}{Epoch length results}
+\end{center}
+
+We find that an epoch of $5$ gives good results. However, as we said it, for low temperatures the acceptance probability of moves that increase the Hamiltonian is low and therefore we have to stay at the same temperature during few iterations to see the effect of this temperature value. This remark suggests to try non-constant epoch lengths, i.e. to wait longer times before decreasing the temperature when $T$ is low.
+
+A possible scheme to implement this is the following:
+\begin{equation*}
+\left\{
+\begin{aligned}
+&\textrm{if }T>5, \textrm{ decrease temperature every 5 iterations}\\
+&\textrm{if }T>1, \textrm{ decrease temperature every 10 iterations}\\
+&\textrm{if }T>0.1, \textrm{ decrease temperature every 20 iterations}\\
+\end{aligned}
+\right.
+\end{equation*}
 
 \subsection{Utility of Simulated Annealing}
 
