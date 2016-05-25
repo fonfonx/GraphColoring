@@ -88,16 +88,21 @@ def expDecrease2(T0,T,n):
     return expoDecrease(T,0.85,n,10,0.1)
 
 def expDecrease3(T0,T,n):
-    if T>5 and n%5==0:
+    if T>T0/2.0 and n%5==0:
         return 0.85*T
-    if T>1 and n%10==0:
+    if T>T0/10.0 and n%10==0:
         return 0.85*T
-    if T>0.1 and n%20==0:
+    if T>T0/100.0 and n%20==0:
         return 0.85*T
     return T
 
 def powDecrease(T0,T,n):
     return powerDecrease(T0,n,0.5)
+
+def powDecrease2(T0,T,n):
+    if (T>T0/2.0 and n%5==0) or (T>T0/10.0 and n%10==0) or (T>T0/100.0 and n%20==0):
+        return T0/sqrt(n)
+    return T
 
 def test():
     G = Graph(N, d)
@@ -120,7 +125,7 @@ def test_moy(graph,N,d):
     T0=G.initialTemperature(nbIterInit)
     print T0
     tabmin=np.zeros(4)
-    dec=[expDecrease,expDecrease2, expDecrease3,powDecrease]
+    dec=[expDecrease, expDecrease3,powDecrease, powDecrease2]
     for method in range(4):
         tab=np.zeros(nbIter+1)
         minmoy=0.0
