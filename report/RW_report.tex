@@ -187,6 +187,21 @@ As we can see on the figure, we obtain better results with simulated annealing a
 
 \subsection{Influence of Graph density $c$ on $H_{\min}$}
 
+We plot the curve $H_{\min}$ as a function of $c$ for some fixed values of $q$ and $N=100$. The value of $H_{\min}$ is obtained by computing the average value of the minimum Hamiltonian for several Erdös-Renyi graphs with the same parameters. We obtain the following curves.
+
+\begin{figure}[H]
+ \begin{minipage}[b]{\linewidth}
+  \centering\epsfig{figure=../Plots/Hmin/hmin_quick.png,width=0.5\linewidth}
+  \caption{$H_{\min}$ as a function of $c$ (blue: $q=3$, green: $q=5$, red: $q=7$) \label{hmin}}
+ \end{minipage}
+\end{figure}
+
+We observe two phenomenas:
+\begin{enumerate}
+\item $H_{\min}$ is a decreasing function of $q$. This is conform to our intuition because if we have more colors to color a graph, it is easier to color it properly or to have a small Hamiltonian value.
+\item There seems to be a phase transition in the behavior of the graph regarding its colorability. There is a threshold value $c_{\mathrm{th}}(q)$ such that for $c<c_{\mathrm{th}}(q)$, the graph is colorable with our algorithm and for $c>c_{\mathrm{th}}(q)$, the graph is not colorable with our algorithm. However saying that our algorithm is not able to color the graph does not mean that there is no proper coloration of the graph but only that it is too difficult to find for our algorithm. Besides we can suppose that there exists another threshold value for $c$ concerning the colorability of the graph, which will be above $c_{\mathrm{th}}(q)$. As remarked in the first point, $H_{\min}$ is a decreasing function of $q$ and therefore $c_{\mathrm{th}}(q)$ is an increasing function of $q$. Moreover the phase transition is very easy to observe on the graph because the slope of the curve seems to be affine by steps and the slope of the second part of the curve is really bigger than the slope of the first part.
+\end{enumerate}
+
 \bibliography{bibli_RW}
 \bibliographystyle{plain}
 \end{document}
