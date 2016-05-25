@@ -104,6 +104,11 @@ def powDecrease2(T0,T,n):
         return T0/sqrt(n)
     return T
 
+def linDecrease2(T0,T,n):
+    if (T > T0 / 2.0 and n % 5 == 0) or (T > T0 / 10.0 and n % 10 == 0) or (T > T0 / 100.0 and n % 20 == 0) and T>0.25:
+        return T-0.25
+    return T
+
 def test():
     G = Graph(N, d)
     #G.erdosRenyi(c)
@@ -124,9 +129,9 @@ def test_moy(graph,N,d):
     print "lol"
     T0=G.initialTemperature(nbIterInit)
     print T0
-    tabmin=np.zeros(4)
-    dec=[expDecrease, expDecrease3,powDecrease, powDecrease2]
-    for method in range(4):
+    tabmin=np.zeros(3)
+    dec=[linDecrease2, expDecrease3,powDecrease2]
+    for method in range(3):
         tab=np.zeros(nbIter+1)
         minmoy=0.0
         for k in range(10):
@@ -193,4 +198,4 @@ def Hmin(q):
 
 #Hmin(5)
 
-test_moy("G2.mat",200,5)
+test_moy("G4.mat",100,7)
