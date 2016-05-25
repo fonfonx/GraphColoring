@@ -31,11 +31,8 @@
 This report summarizes our methodology and results in the context of experimenting the Markov Chain Monte Carlo method for the problem of graph coloring.
 \end{abstract}
 
-\section{Introduction}
-\label{sec:introduction}
-\todo[inline]{TODO}
-
 \section{Metropolis chain}
+\label{sec2}
 
 In this section we run experiments with $\beta$ fixed and we apply the Metropolis-Hastings algorithm as described in the project statement. We analyze the influence of the initial value of $\beta$ on the minimal value of the Hamiltonian reached by our algorithm. We can think of $\beta$ as the inverse of a temperature and therefore we note $T=\dfrac{1}{\beta}$.
 
@@ -101,29 +98,6 @@ $0.85$ & $0.25$ & $0.5$ \\
 \end{tabular} 
 \end{center}
 
-We compared the three schemes with these parameters by plotting the evolution of $H(x^t)$ for all schemes:
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=2.3in, height = 1.7in]{H_G1_cropped.pdf}
-        \caption{$G_1$}
-        \label{fig:g1}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
-      %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=2.3in, height=1.7in]{H_G2_cropped.pdf}
-        \caption{$G_2$}
-        \label{fig:g2}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
-    %(or a blank line to force the subfigure onto a new line)
-    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve represents the evolution of the energy using a linear scheme while the blue curve represents the evolution of the energy using an exponential scheme.}
-    \label{fig:comparison}
-\end{figure}
-
-As we can see from figure \ref{fig:comparison}, results are pretty similar. The exponential schedule tends to decrease faster but obtains better results overall, as such, we chose this schedule to decrease the temperature.
-
 \subsection{Epoch length}
 
 We found out that decreasing the temperature at each iteration was not the best cooling scheme. Indeed when $T$ is low, the probability to accept increasing moves is small and therefore we need to stay at the same value of the temperature before accepting some moves. If we decrease directly the value of $T$ we do not really take profit of the effect of intermediate temperature values. That is why we tried to decrease the temperature every $x$ iterations, where $x \geqslant 2$ is an integer to find. In order to find this epoch length we run the Metropolis algorithm several times with different values of $x$ and we chose the value of $x$ that gave the best average results. We also set the number of iterations to $10,000$ to make sure to reach convergence.We summarize our results in the following tabular:
@@ -151,9 +125,40 @@ A possible scheme to implement this is the following:
 \right.
 \end{equation*}
 
+\subsection{Determination of the best decreasing function}
 
-Even though differences are really small, an epoch length of 5 seems to be the most suited for our problem.
-Surprisingly enough, we observed that waiting a certain amount of iterations at the beginning of the algorithm before decreasing the temperature was worse than decreasing straight away \todo{a verifier}
+In order to choose the best decreasing function, we plot on the same graph the average curves obtained for the three cooling schemes presented above. In order to decrease the bias due to randomness we work on fixed graphs with the same initial random coloring and we average the results on $10$ runs.
+
+Here are the curves $(t \mapsto H(x^t))$ for the three schemes. 
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=2.3in, height = 1.7in]{H_G1_cropped.pdf}
+        \caption{$G_1$}
+        \label{fig:g1}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=2.3in, height=1.7in]{H_G2_cropped.pdf}
+        \caption{$G_2$}
+        \label{fig:g2}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \caption{Evolution of the energy of the Metropolis algorithm for two graphs. The red curve represents the evolution of the energy using a linear scheme while the blue curve represents the evolution of the energy using an exponential scheme.}
+    \label{fig:comparison}
+\end{figure}
+
+
+
+As we can see from figure \ref{fig:comparison}, results are pretty similar. The exponential schedule tends to decrease faster but obtains better results overall, as such, we chose this schedule to decrease the temperature.
+
+\subsection{Utility of Simulated Annealing}
+
+In this subsection we want to compare the results obtained with simulated annealing and the results obtained in section \ref{sec2} without simulated annealing. Therefore we run experiments on the same graph as in section \ref{sec2} with the decreasing function described in the previous part. We obtain the following results:
+
+\subsection{Influence of Graph density $c$ on $H_{\min}$}
 
 \bibliography{bibli_RW}
 \bibliographystyle{plain}
