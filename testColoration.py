@@ -133,7 +133,7 @@ def Hmin(q):
 
 
 #competition(mat_file,100,3)
-test()
+#test()
 #valeurs_moy()
 
 #Hmin(5)
