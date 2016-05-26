@@ -8,6 +8,7 @@ import time
 
 
 class Graph:
+
     def __init__(self, nbNodes, nbColors):
         self.adjMat = np.zeros((nbNodes, nbNodes), dtype=np.int)
         self.nbColors = nbColors
@@ -32,7 +33,7 @@ class Graph:
         self.coloration = np.zeros(self.nbNodes, dtype=np.int)
         self.bestColoration = np.zeros(self.nbNodes, dtype=np.int)
 
-    # write a .mat file
+    # write a .mat file (for the challenge)
     def writeMat(self, file):
         self.coloration = self.bestColoration
         H = self.hamiltonian()
