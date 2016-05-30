@@ -2,7 +2,7 @@ import numpy as np
 import random
 from math import *
 from matplotlib import pyplot as plt
-import networkx as nx
+#import networkx as nx
 import scipy.io
 import time
 
@@ -175,4 +175,4 @@ class Graph:
         else:
             print "division by zero, choosing fixed initial temperature"
             return 10.0
-        
+

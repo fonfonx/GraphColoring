@@ -69,9 +69,12 @@ def mydecrease(T0,T,n):
             return T0/sqrt(n)
     return T
 
+def powdecrease(T0,T,n):
+    return T0/sqrt(n)
+
 # chosen decreasingFunction
 def decreasingFunction(T0, T, n):
-    return mydecrease(T0,T,n)
+    return powdecrease(T0,T,n)
 
 # main function that we run
 def test():
@@ -91,8 +94,7 @@ def competition(input, nbNodes, nbColors):
     while H>0:
         G.randomColoration()
         T0=G.initialTemperature(nbIterInit)
-        G.metropolisAlgo(nbIter, T0, decreasingFunction, False, False,out_file)
-        actH=G.hamiltonian()
+        actH,tabH=G.metropolisAlgo(nbIter, T0, decreasingFunction, False, False,out_file)
         if actH<H:
             H=actH
             print H
