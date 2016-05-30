@@ -60,9 +60,18 @@ def expoDecrease(T0,T,n):
         return 0.85*T
     return T
 
+def mydecrease(T0,T,n):
+    if n<=10:
+        return T0
+    if n>10:
+        if n%(10+n/100)==0:
+            #return 0.95*T
+            return T0/sqrt(n)
+    return T
+
 # chosen decreasingFunction
 def decreasingFunction(T0, T, n):
-    return powerDecrease(T0,T,n)
+    return mydecrease(T0,T,n)
 
 # main function that we run
 def test():
@@ -75,4 +84,26 @@ def test():
     # G.vizualisation()
     G.metropolisAlgo(nbIter, T0, decreasingFunction, plot,save,out_file)
 
-test()
+def competition(input, nbNodes, nbColors):
+    G=Graph(nbNodes,nbColors)
+    G.initFromFile(input)
+    H=1000
+    while H>0:
+        G.randomColoration()
+        T0=G.initialTemperature(nbIterInit)
+        G.metropolisAlgo(nbIter, T0, decreasingFunction, False, False,out_file)
+        actH=G.hamiltonian()
+        if actH<H:
+            H=actH
+            print H
+            G.writeMat(out_file)
+        print "actual best:",H
+
+def verification(input, coloration,nbNodes,nbColors):
+    G=Graph(nbNodes,nbColors)
+    G.initFromFile(input)
+    G.setColorationFromMat(coloration)
+    print G.hamiltonian()
+
+#verification(mat_file,"coloration_5.mat",100,3)
+competition(mat_file,100,3)

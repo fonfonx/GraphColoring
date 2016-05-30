@@ -36,10 +36,10 @@ class Graph:
     # write a .mat file (for the challenge)
     def writeMat(self, file):
         self.coloration = self.bestColoration
-        H = self.hamiltonian()
+        E = self.hamiltonian()
         X = self.coloration + 1
-        scipy.io.savemat(file + "_" + str(H) + ".mat", {'X': X})
-        return file + "_" + str(H) + ".mat"
+        scipy.io.savemat(file + "_" + str(E) + ".mat", {'X': X,'E':E})
+        return file + "_" + str(E) + ".mat"
 
     # save a graph as a .mat file
     def saveGraph(self,file):
@@ -175,3 +175,4 @@ class Graph:
         else:
             print "division by zero, choosing fixed initial temperature"
             return 10.0
+        
